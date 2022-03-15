@@ -1,0 +1,21 @@
+# Build results
+*.exe
+*.o
+
+# Autotools artifacts
+*.lo
+config.status
+config.log
+autom4te.cache
+aclocal.m4
+/Makefile
+.deps
+libtool
+
+# Autotools requirements
+# Include in releases, not in repository
+# make dist and make distcheck should handle that
+/build-aux/
+/m4/
+Makefile.in
+configure
