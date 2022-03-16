@@ -26,13 +26,13 @@ jobs:
       - uses: actions/checkout@v2
       
       - name: Update gfortran
-        run: sudo apt-get install gfortran-11
+        run: sudo apt-get install gfortran-10
 
       # Runs a single command using the runners shell
       - name: Check compile
-        run: cd SpherePack; tar xvzf spherepack3.2.tar.gz; cd spherepack3.2; make libspherepack F90=gfortran-11 MAKE=make
+        run: cd SpherePack; tar xvzf spherepack3.2.tar.gz; cd spherepack3.2; make libspherepack F90=gfortran-10 MAKE=make
 
       # Runs a set of commands using the runners shell
       - name: Run the test scripts
         run: |
-          cd SpherePack/spherepack3.2; make testspherepack F90=gfortran-11 MAKE=make
+          cd SpherePack/spherepack3.2; make testspherepack F90=gfortran-10 MAKE=make
