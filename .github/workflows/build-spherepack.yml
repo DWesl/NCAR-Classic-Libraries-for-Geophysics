@@ -34,10 +34,10 @@ jobs:
             cd SpherePack; 
             tar xvzf spherepack3.2.tar.gz; 
             cd spherepack3.2; 
-            make libspherepack F90=gfortran-10 FFLAGS=-fallow-argument-mismatch MAKE=make
+            make libspherepack F90="gfortran-10 -fallow-argument-mismatch" MAKE=make
 
       # Runs a set of commands using the runners shell
       - name: Run the test scripts
         run: |
           cd SpherePack/spherepack3.2; 
-          make testspherepack F90=gfortran-10 FFLAGS=-fallow-argument-mismatch MAKE=make
+          make testspherepack F90="gfortran-10 -fallow-argument-mismatch" MAKE=make
