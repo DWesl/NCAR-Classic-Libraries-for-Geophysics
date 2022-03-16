@@ -315,8 +315,8 @@ c
 c     truncate spectrum to eliminate aliasing of the
 c     product terms in the shallow-water equations
 c
-      call trunc(nlat,mmode,mdab,br,bi)
-      call trunc(nlat,mmode,mdab,cr,ci)
+      call trunc_shallow(nlat,mmode,mdab,br,bi)
+      call trunc_shallow(nlat,mmode,mdab,cr,ci)
 c
 c     resynthesize the velocity components
 c
@@ -337,7 +337,7 @@ c
 c     truncate spectrum to eliminate aliasing of the
 c     product terms in the shallow-water equations
 c
-      call trunc(nlat,mmode,mdab,a,b)
+      call trunc_shallow(nlat,mmode,mdab,a,b)
 c
 c     resynthesize the geopotential p
 c
@@ -510,12 +510,6 @@ c
       return
       end
 c
-      function atanxy(x,y)
-      atanxy = 0.
-      if(x.eq.0. .and. y.eq.0.) return
-      atanxy = atan2(y,x)
-      return
-      end
       subroutine sine(n,x,w)
 c
 c     computes the sine transform
@@ -545,7 +539,7 @@ c
       return
       end
 c
-      subroutine trunc(nm,ms,id,a,b)
+      subroutine trunc_shallow(nm,ms,id,a,b)
 c
 c     truncates spectral coefficients so that aliasing
 c     does not occur when computing the spectral representations

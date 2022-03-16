@@ -1,9 +1,12 @@
 # Build results
 *.exe
 *.o
+.libs
+/lib/
 
 # Autotools artifacts
 *.lo
+*.la
 config.status
 config.log
 autom4te.cache
@@ -11,6 +14,9 @@ aclocal.m4
 /Makefile
 .deps
 libtool
+*.trs
+t*.log
+.dirstamp
 
 # Autotools requirements
 # Include in releases, not in repository
@@ -19,3 +25,4 @@ libtool
 /m4/
 Makefile.in
 configure
+spherepack-*.*

@@ -145,23 +145,3 @@ c
       end do
       return
       end
-      subroutine ctos(x,y,z,r,theta,phi)
-      r1 = x*x+y*y
-      if(r1 .ne. 0.) go to 10
-      phi = 0.
-      theta = 0.
-      if(z .lt. 0.) theta = 4.*atan(1.)
-      return
-   10 r = sqrt(r1+z*z)
-      r1 = sqrt(r1) 
-      phi = atan2(y,x)
-      theta = atan2(r1,z)
-      return
-      end
-      subroutine stoc(r,theta,phi,x,y,z)
-      st = sin(theta)
-      x = r*st*cos(phi)
-      y = r*st*sin(phi)
-      z = r*cos(theta)
-      return
-      end

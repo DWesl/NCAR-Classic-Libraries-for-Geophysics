@@ -813,7 +813,7 @@ c
       end do
       end if
       if(3*nec.lt.2*nem.or.nem.eq.0) then
-      call tmxmx(nte,nec,idp,pe(1,1,ip),nte,idp,
+      call tmxmx_shpe(nte,nec,idp,pe(1,1,ip),nte,idp,
      1          ze(1,1,ip),xe,ye,ipse(1,ip),jzse(1,ip))  
       do i=1,nte
       ye(i,1) = xe(i,1)-ye(i,1)
@@ -824,11 +824,11 @@ c
       end do
       end if
       else
-      call tmxmx(nte,nem,idp,pe(1,nec+1,ip),nte,idp,
+      call tmxmx_shpe(nte,nem,idp,pe(1,nec+1,ip),nte,idp,
      1ze(1,nec+1,ip),xe,ye,ipse(nec+1,ip),jzse(nec+1,ip))
       end if
       if(3*noc.lt.2*nom.or.nom.eq.0) then
-      call tmxmx(nto,noc,idp,po(1,1,ip),nto,idp,
+      call tmxmx_shpe(nto,noc,idp,po(1,1,ip),nto,idp,
      1          zo(1,1,ip),xo,yo,ipso(1,ip),jzso(1,ip))
       do i=1,nte
       yo(i,1) = xo(i,1)-yo(i,1)
@@ -839,7 +839,7 @@ c
       end do
       end if
       else
-      call tmxmx(nto,nom,idp,po(1,noc+1,ip),nto,idp,
+      call tmxmx_shpe(nto,nom,idp,po(1,noc+1,ip),nto,idp,
      1zo(1,noc+1,ip),xo,yo,ipso(noc+1,ip),jzso(noc+1,ip))  
       end if
       do i=1,nte
@@ -861,76 +861,7 @@ c
       end do
       return
       end
-      subroutine mxm(lr,lc,ld,a,mc,md,b,nd,c)
-      double precision a(ld,*),b(md,*),c(nd,*)
-      do i=1,lr
-      do j=1,mc
-      c(i,j) = 0.
-      do k=1,lc 
-      c(i,j) = c(i,j)+a(i,k)*b(k,j)
-      end do
-      end do
-      end do
-      return
-      end
-      subroutine smxm(lr,lc,ld,a,mc,md,b,nd,c)
-      dimension a(ld,*),b(md,*),c(nd,*)
-      do i=1,lr
-      do j=1,mc
-      c(i,j) = 0.
-      do k=1,lc 
-      c(i,j) = c(i,j)+a(i,k)*b(k,j)
-      end do
-      end do
-      end do
-      return
-      end
-      subroutine mxmx(lr,lc,ld,a,mc,md,b,x,y)
-      dimension a(ld,*),b(md,*),x(ld,2),y(ld,2)
-      do k=1,lr
-      y(k,1) = 0.
-      y(k,2) = 0.
-      end do
-c
-      if(lc.le.0) return
-      do i=1,lc
-      sum1 = 0.
-      sum2 = 0.
-      do j=1,mc
-      sum1 = sum1 + b(i,j)*x(j,1)
-      sum2 = sum2 + b(i,j)*x(j,2)
-      end do
-      do k=1,lr
-      y(k,1) = y(k,1)+sum1*a(k,i)
-      y(k,2) = y(k,2)+sum2*a(k,i)
-      end do
-      end do
-      return
-      end
-      subroutine dmxmx(lr,lc,ld,a,mc,md,b,x,y)
-      double precision a(ld,*),b(md,*),x(ld,2),y(ld,2),
-     1                 sum1,sum2
-      do k=1,lr
-      y(k,1) = 0.
-      y(k,2) = 0.
-      end do
-c
-      if(lc.le.0) return
-      do i=1,lc
-      sum1 = 0.
-      sum2 = 0.
-      do j=1,mc
-      sum1 = sum1 + b(i,j)*x(j,1)
-      sum2 = sum2 + b(i,j)*x(j,2)
-      end do
-      do k=1,lr
-      y(k,1) = y(k,1)+sum1*a(k,i)
-      y(k,2) = y(k,2)+sum2*a(k,i)
-      end do
-      end do
-      return
-      end
-      subroutine tmxmx(lr,lc,ld,a,mc,md,b,x,y,is,js)
+      subroutine tmxmx_shpe(lr,lc,ld,a,mc,md,b,x,y,is,js)
       dimension a(ld,*),b(md,*),x(ld,2),y(ld,2),
      1              is(*),js(*)
 c
@@ -953,84 +884,6 @@ c
       y(k,2) = y(k,2)+sum2*a(k,i)
       end do
       end do
-      return
-      end
-      subroutine trunc(irc,n,idp,a,nrc,ijs)
-      double precision a,eps
-      parameter (eps=5.d-8)
-      dimension a(idp,*),ijs(n)
-c
-c     irc = 0 for columns , or irc = 1 for rows
-c
-      if(irc.ne.0) go to 30
-      do 20 j=1,nrc
-      do i=1,n
-      ijs(j) = i
-      if(dabs(a(i,j)) .gt. eps) go to 20
-      end do
- 20   continue
-      return
- 30   do 50 i=1,nrc
-      do j=1,n
-      ijs(i) = j
-      if(abs(a(i,j)) .gt. eps) go to 50
-      end do
- 50   continue
-      return
-      end
-      subroutine gs(n,x,y,z)
-      dimension x(n),y(n),z(n)
-      double precision x,y,z,sum
-c
-c     accumulate innerproducts of x with respect to y.
-c
-      sum = 0.
-      do i=1,n
-      sum = sum+x(i)*y(i)
-      end do
-      do i=1,n
-      z(i) = z(i)+sum*y(i)
-      end do
-      return
-      end
-      subroutine normal(n,x,id,q)
-      dimension x(n),q(id,n)
-      double precision x,q,sum,sqs
-c
-c     normalize x
-c
-      sqs = 0.
-      do i=1,n
-      sum = 0.
-      do j=1,n
-      sum = sum+q(i,j)*x(j)
-      end do
-      sqs = sqs+sum*x(i)
-      end do
-c
-      sqs = dsqrt(sqs)
-      do i=1,n
-      x(i) = x(i)/sqs
-      end do
-      return
-      end
-      subroutine coe(moe,n,x,dmax)
-      double precision x(n),dmax
-      nh = (n+1)/2
-      dmax = 0.
-      if(moe.ne.0) go to 1
-      do i=1,nh
-      dmax = max(dmax,dabs(x(i)-x(n-i+1)))
-      x(i) = .5*(x(i)+x(n-i+1))
-      x(n-i+1) = x(i)
-      end do
-      return
- 1    do i=1,nh
-      dmax = max(dmax,dabs(x(i)+x(n-i+1)))
-      x(i) = .5*(x(i)-x(n-i+1))
-      x(n-i+1) = -x(i)
-      end do
-      if(mod(n,2).ne.0) x(nh) = 0.
       return
       end
 c     subroutine dlfkp(m,n,cp)
